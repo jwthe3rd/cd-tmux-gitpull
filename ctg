@@ -1,7 +1,8 @@
 #!/usr/bin/zsh
 #
 
-PATH_DIR="${1-/home/john}"
+PASSED_DIR="${1-/home/john}"
+PATH_DIR=$(readlink -f $PASSED_DIR)
 BRANCH="${2-main}"
 BASE=$(basename $PATH_DIR)
 CURRTMUX=$(echo $TMUX)
@@ -18,7 +19,7 @@ if ! tmux has-session -t ${BASE}; then
 
 	if ! [[ -z "$CURRTMUX" ]]; then
 
-		tmux new -s ${BASE} -c ${PATH_DIR} -d
+		tmux neww -dn ${BASE} -c ${PATH_DIR}
 	else
 		tmux new -s ${BASE} -c ${PATH_DIR}
 	fi
