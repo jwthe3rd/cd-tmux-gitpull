@@ -1,0 +1,29 @@
+#!/usr/bin/zsh
+#
+
+PATH_DIR="${1-/home/john}"
+BRANCH="${2-main}"
+BASE=$(basename $PATH_DIR)
+CURRTMUX=$(echo $TMUX)
+
+if [ -d "${PATH_DIR}/.git" ]; then
+	cd ${PATH_DIR}
+	git checkout ${BRANCH}
+	git pull origin ${BRANCH}
+	cd -
+fi
+
+
+if ! tmux has-session -t ${BASE}; then
+
+	if ! [[ -z "$CURRTMUX" ]]; then
+
+		tmux new -s ${BASE} -c ${PATH_DIR} -d
+	else
+		tmux new -s ${BASE} -c ${PATH_DIR}
+	fi
+
+else
+	tmux a -t ${BASE}
+
+fi
